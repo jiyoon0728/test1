@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog1.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog1.dto.user.UserReq.LoginReqDto;
 import shop.mtcoding.blog1.handler.ex.CustomException;
 import shop.mtcoding.blog1.model.User;
 import shop.mtcoding.blog1.model.UserRepository;
@@ -27,4 +28,13 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public User 로그인(LoginReqDto loginReqDto) {
+        User principal = userRepository.findByUsernameAndPassword(
+                loginReqDto.getUsername(), loginReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다");
+        }
+        return principal;
+    };
 }
